@@ -1,11 +1,15 @@
 package org.example;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.listeners.LocalListener;
 import org.example.pages.CartPage;
 import org.example.pages.HomePage;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -17,6 +21,15 @@ public class SelenideTest {
 
     HomePage homepage = new HomePage();
     CartPage cartPage = new CartPage();
+
+    @BeforeMethod
+    public void setUp(){
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
+                .screenshots(true)
+                .savePageSource(true)
+        );
+        SelenideLogger.addListener("LocalListener", new LocalListener());
+    }
 
     @Test
     public void addOneItem() {
